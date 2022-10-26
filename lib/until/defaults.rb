@@ -1,4 +1,4 @@
-class Poll
+class Until
   module Defaults
     def self.interval_milliseconds
       0

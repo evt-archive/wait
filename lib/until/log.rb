@@ -1,7 +1,7 @@
-class Poll
+class Until
   class Log < ::Log
     def tag!(tags)
-      tags << :poll
+      tags << :until
       tags << :library
       tags << :verbose
     end

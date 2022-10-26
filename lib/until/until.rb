@@ -1,4 +1,4 @@
-class Poll
+class Until
   Error = Class.new(RuntimeError)
 
   include Dependency
@@ -173,7 +173,7 @@ class Poll
       instance
     end
 
-    class Poll < ::Poll
+    class Until < ::Until
       attr_accessor :telemetry_sink
     end
   end

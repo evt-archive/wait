@@ -5,10 +5,10 @@ puts RUBY_DESCRIPTION
 
 require_relative '../init.rb'
 
-require 'poll/controls'
+require 'until/controls'
 
 require 'test_bench'; TestBench.activate
 
 require 'pp'
 
-Controls = Poll::Controls
+Controls = Until::Controls

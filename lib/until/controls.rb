@@ -1,3 +1,3 @@
 require 'clock/controls'
 
-require 'poll/controls/time'
+require 'until/controls/time'

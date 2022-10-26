@@ -1,4 +1,4 @@
-class Poll
+class Until
   module Controls
     Time = Clock::Controls::Time
   end
