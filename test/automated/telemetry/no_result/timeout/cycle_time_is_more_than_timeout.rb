@@ -5,9 +5,9 @@ context "Telemetry" do
     context "Interval" do
       context "Cycle Time Is More than the Timeout Time" do
         timeout_milliseconds = 0
-        cycle = Poll.build(timeout_milliseconds: timeout_milliseconds)
+        cycle = Until.build(timeout_milliseconds: timeout_milliseconds)
 
-        sink = Poll.register_telemetry_sink(cycle)
+        sink = Until.register_telemetry_sink(cycle)
 
         cycle_milliseconds = timeout_milliseconds + 1
         result = cycle.() do
@@ -15,7 +15,7 @@ context "Telemetry" do
           nil
         end
 
-        test "Poll's result is the return value of the action" do
+        test "Until's result is the return value of the action" do
           assert(result.nil?)
         end
 

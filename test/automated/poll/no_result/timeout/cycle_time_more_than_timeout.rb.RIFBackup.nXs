@@ -1,11 +1,11 @@
 require_relative '../../../automated_init'
 
-context "Until" do
+context "Poll" do
   context "Action Got No Result" do
     context "Timeout" do
       context "Cycle Time is More than the Timeout Time" do
         timeout_milliseconds = 1
-        cycle = Until.build(timeout_milliseconds: timeout_milliseconds)
+        cycle = Poll.build(timeout_milliseconds: timeout_milliseconds)
 
         cycle_milliseconds = timeout_milliseconds + 1
         cycles = nil

@@ -3,17 +3,19 @@ require_relative '../../../automated_init'
 context "Telemetry" do
   context "Action Got No Result" do
     context "Interval" do
-      context "Cycle Time Is Less than the Timeout Time" do
-        timeout_milliseconds = 1
-        cycle = Until.build(timeout_milliseconds: timeout_milliseconds)
+      context "Cycle Time Is More than the Timeout Time" do
+        timeout_milliseconds = 0
+        cycle = Poll.build(timeout_milliseconds: timeout_milliseconds)
 
-        sink = Until.register_telemetry_sink(cycle)
+        sink = Poll.register_telemetry_sink(cycle)
 
-        result = cycle.() do |i|
+        cycle_milliseconds = timeout_milliseconds + 1
+        result = cycle.() do
+          sleep cycle_milliseconds / 1000.0
           nil
         end
 
-        test "Until's result is the return value of the action" do
+        test "Poll's result is the return value of the action" do
           assert(result.nil?)
         end
 

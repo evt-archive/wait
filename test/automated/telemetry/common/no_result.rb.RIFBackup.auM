@@ -4,9 +4,9 @@ context "Telemetry" do
   context "Action Got No Result" do
     interval_milliseconds = 1
     timeout_milliseconds = 0
-    cycle = Until.build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds)
+    cycle = Poll.build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds)
 
-    sink = Until.register_telemetry_sink(cycle)
+    sink = Poll.register_telemetry_sink(cycle)
 
     cycle.() do
       nil

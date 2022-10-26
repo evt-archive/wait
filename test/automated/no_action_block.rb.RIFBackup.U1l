@@ -1,11 +1,11 @@
 require_relative 'automated_init'
 
-context "Until" do
+context "Poll" do
   context "Actuate Without Block" do
-    cycle = Until.build
+    cycle = Poll.build
 
     test "Is an error" do
-      assert_raises(Until::Error) do
+      assert_raises(Poll::Error) do
         cycle.()
       end
     end

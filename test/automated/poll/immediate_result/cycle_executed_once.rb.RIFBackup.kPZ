@@ -1,8 +1,8 @@
 require_relative '../../automated_init'
 
-context "Until" do
+context "Poll" do
   context "Action Got Immediate Result" do
-    cycle = Until.build
+    cycle = Poll.build
 
     cycles = nil
     cycle.() do |i|

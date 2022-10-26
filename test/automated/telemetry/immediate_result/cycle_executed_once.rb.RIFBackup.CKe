@@ -3,15 +3,15 @@ require_relative '../../automated_init'
 context "Telemetry" do
   context "Action Got Immediate Result" do
     timeout_milliseconds = 0
-    cycle = Until.build(timeout_milliseconds: timeout_milliseconds)
+    cycle = Poll.build(timeout_milliseconds: timeout_milliseconds)
 
-    sink = Until.register_telemetry_sink(cycle)
+    sink = Poll.register_telemetry_sink(cycle)
 
     result = cycle.() do
       :something
     end
 
-    test "Until's result is the return value of the action" do
+    test "Poll's result is the return value of the action" do
       assert(result == :something)
     end
 
