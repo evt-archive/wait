@@ -2,14 +2,14 @@ require_relative '../automated_init'
 
 context "Wait" do
   context "Cycle Executes Wait Affirmative Result is Produced" do
-    cycle = Wait.build
+    wait = Wait.build
 
-    sink = Wait.register_telemetry_sink(cycle)
+    sink = Wait.register_telemetry_sink(wait)
 
     cycle_limit = 1
 
-    cycles = cycle.() do |i|
-      if i == cycle_limit
+    cycles = wait.() do |cycle|
+      if cycle == cycle_limit
         true
       end
     end

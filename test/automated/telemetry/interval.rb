@@ -4,14 +4,14 @@ context "Telemetry" do
   context "Interval" do
     interval_milliseconds = 11
 
-    cycle = Wait.build(interval_milliseconds: interval_milliseconds)
+    wait = Wait.build(interval_milliseconds: interval_milliseconds)
 
-    sink = Wait.register_telemetry_sink(cycle)
+    sink = Wait.register_telemetry_sink(wait)
 
     cycle_limit = 2
 
-    cycles = cycle.() do |i|
-      if i == cycle_limit
+    cycles = wait.() do |cycle|
+      if cycle == cycle_limit
         true
       end
     end

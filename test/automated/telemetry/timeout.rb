@@ -3,11 +3,11 @@ require_relative '../automated_init'
 context "Telemetry" do
   context "Timeout" do
     timeout_milliseconds = 0
-    cycle = Wait.build(timeout_milliseconds: timeout_milliseconds)
+    wait = Wait.build(timeout_milliseconds: timeout_milliseconds)
 
-    sink = Wait.register_telemetry_sink(cycle)
+    sink = Wait.register_telemetry_sink(wait)
 
-    cycle.() do
+    wait.() do
     end
 
     test "Timed out" do
