@@ -9,20 +9,20 @@ context "Telemetry" do
     sink = Until.register_telemetry_sink(cycle)
 
     cycle.() do
-      nil
+      false
     end
 
-    test "Didn't record got result" do
-      refute(sink.recorded_got_result?)
+    test "Condition not satisfied" do
+      refute(sink.recorded_condition_satisfied?)
     end
 
-    test "Recorded delayed" do
+    test "Delayed" do
       assert(sink.recorded_delayed? do |record|
         record.data == 1
       end)
     end
 
-    test "Recorded timed out" do
+    test "Timed out" do
       assert(sink.recorded_timed_out? do |record|
         record.data < Clock::UTC.now
       end)

@@ -11,8 +11,8 @@ context "Telemetry" do
       true
     end
 
-    test "Got result" do
-      assert(sink.recorded_got_result?)
+    test "Condition satisfied" do
+      assert(sink.recorded_condition_satisfied?)
     end
 
     test "Did not delay" do

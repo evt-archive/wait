@@ -86,7 +86,7 @@ class Until
 
       if result == true
         logger.debug { "Cycle condition is met (Cycle: #{cycle})" }
-        telemetry.record :got_result
+        telemetry.record :condition_satisfied
         break
       end
 
@@ -157,7 +157,7 @@ class Until
 
       record :cycle
       record :invoked_action
-      record :got_result
+      record :condition_satisfied
       record :delayed
       record :timed_out
     end
