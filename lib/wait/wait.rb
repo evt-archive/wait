@@ -49,13 +49,13 @@ class Wait
     ::Telemetry.configure self
   end
 
-  def self.call(interval_milliseconds: nil, timeout_milliseconds: nil, &action)
+  def self.call(interval_milliseconds: nil, timeout_milliseconds: nil, &condition)
     instance = build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds)
-    instance.call(&action)
+    instance.call(&condition)
   end
 
-  def call(&action)
-    if action.nil?
+  def call(&condition)
+    if condition.nil?
       raise NoBlockError, "Wait must be actuated with a block"
     end
 
@@ -74,7 +74,7 @@ class Wait
       cycle += 1
       telemetry.record :cycle, cycle
 
-      result, elapsed_milliseconds = evaluate_condition(cycle, &action)
+      result, elapsed_milliseconds = evaluate_condition(cycle, &condition)
 
       if result.nil?
         result = false
@@ -109,17 +109,17 @@ class Wait
     return cycle_count
   end
 
-  def evaluate_condition(cycle, &action)
-    action_start_time = clock.now
+  def evaluate_condition(cycle, &condition)
+    condition_start_time = clock.now
 
-    logger.trace { "Evaluating condition (Cycle: #{cycle}, Start Time: #{clock.iso8601(action_start_time, precision: 5)})" }
+    logger.trace { "Evaluating condition (Cycle: #{cycle}, Start Time: #{clock.iso8601(condition_start_time, precision: 5)})" }
 
-    result = action.call(cycle)
+    result = condition.call(cycle)
 
-    action_end_time = clock.now
-    elapsed_milliseconds = clock.elapsed_milliseconds(action_start_time, action_end_time)
+    condition_end_time = clock.now
+    elapsed_milliseconds = clock.elapsed_milliseconds(condition_start_time, condition_end_time)
 
-    logger.debug { "Evaluated condition (Cycle: #{cycle}, Elapsed Milliseconds: #{elapsed_milliseconds}, Start Time: #{clock.iso8601(action_start_time, precision: 5)}, End Time: #{clock.iso8601(action_end_time, precision: 5)})" }
+    logger.debug { "Evaluated condition (Cycle: #{cycle}, Elapsed Milliseconds: #{elapsed_milliseconds}, Start Time: #{clock.iso8601(condition_start_time, precision: 5)}, End Time: #{clock.iso8601(condition_end_time, precision: 5)})" }
 
     [result, elapsed_milliseconds]
   end
