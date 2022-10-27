@@ -7,12 +7,8 @@ context "Telemetry" do
 
     sink = Until.register_telemetry_sink(cycle)
 
-    result = cycle.() do
-      :something
-    end
-
-    test "Until's result is the return value of the action" do
-      assert(result == :something)
+    cycle.() do
+      true
     end
 
     test "Got result" do

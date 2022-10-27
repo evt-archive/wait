@@ -7,13 +7,13 @@ context "Until" do
       comment "Cycle: #{cycle}"
       cycles = cycle + 1
 
-      if cycle > 0
+      if cycle == 1
         true
       end
     end
 
-    comment "Cycles: #{cycles}"
-    comment "Result Cycles: #{result_cycles}"
+    comment "Cycles: #{cycles.inspect}"
+    comment "Result Cycles: #{result_cycles.inspect}"
 
     test "Count of cycles executed" do
       assert(result_cycles == cycles)

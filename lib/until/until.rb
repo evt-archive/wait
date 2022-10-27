@@ -61,7 +61,7 @@ class Until
 
     stop_time = nil
     stop_time_iso8601 = nil
-    if !timeout_milliseconds.nil?
+    if not timeout_milliseconds.nil?
       stop_time = clock.now + (timeout_milliseconds.to_f / 1000.0)
       stop_time_iso8601 = clock.iso8601(stop_time, precision: 5)
     end
@@ -85,7 +85,7 @@ class Until
       end
 
       if result == true
-        logger.debug { "Got results from action (Cycle: #{cycle})" }
+        logger.debug { "Cycle condition is met (Cycle: #{cycle})" }
         telemetry.record :got_result
         break
       end
@@ -102,7 +102,7 @@ class Until
       end
     end
 
-    logger.debug { "Cycled (Iterations: #{cycle + 1}, Interval Milliseconds: #{interval_milliseconds}, Timeout Milliseconds: #{timeout_milliseconds.inspect}, Stop Time: #{stop_time_iso8601})" }
+    logger.debug { "Cycled (Cycles: #{cycle + 1}, Interval Milliseconds: #{interval_milliseconds}, Timeout Milliseconds: #{timeout_milliseconds.inspect}, Stop Time: #{stop_time_iso8601})" }
 
     cycle_count = cycle + 1
 
