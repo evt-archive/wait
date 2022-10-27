@@ -1,6 +1,6 @@
 require_relative '../automated_init'
 
-context "Block Result Type" do
+context "Boolean Block Result Type" do
   context "Not Boolean" do
     test "Is an error" do
       assert_raises(Until::ResultTypeError) do
@@ -27,6 +27,16 @@ context "Block Result Type" do
         refute_raises(Until::ResultTypeError) do
           Until.(timeout_milliseconds: 0) do
             false
+          end
+        end
+      end
+    end
+
+    context "Nil" do
+      test "Is considered false" do
+        refute_raises(Until::ResultTypeError) do
+          Until.(timeout_milliseconds: 0) do
+            nil
           end
         end
       end

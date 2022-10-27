@@ -1,5 +1,6 @@
 class Until
   Error = Class.new(RuntimeError)
+  NoBlockError = Class.new(Error)
   TimeoutError = Class.new(Error)
   ResultTypeError = Class.new(Error)
 
@@ -55,7 +56,7 @@ class Until
 
   def call(&action)
     if action.nil?
-      raise Error, "Until must be actuated with a block"
+      raise NoBlockError, "Until must be actuated with a block"
     end
 
     stop_time = nil
@@ -74,6 +75,10 @@ class Until
       telemetry.record :cycle, cycle
 
       result, elapsed_milliseconds = invoke(cycle, &action)
+
+      if result.nil?
+        result = false
+      end
 
       if !result.is_a?(TrueClass) && !result.is_a?(FalseClass)
         raise ResultTypeError, "The block result must be boolean (Result: #{result.inspect})"
