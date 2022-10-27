@@ -1,8 +1,8 @@
 require_relative '../automated_init'
 
-context "Until" do
+context "Wait" do
   context "Predicate Produces Immediate Result" do
-    cycles = Until.() do
+    cycles = Wait.() do
       true
     end
 

@@ -1,8 +1,8 @@
 require_relative '../automated_init'
 
-context "Until" do
-  context "Cycle Executes Until Affirmative Result is Produced" do
-    cycles = Until.() do |cycle|
+context "Wait" do
+  context "Cycle Executes Wait Affirmative Result is Produced" do
+    cycles = Wait.() do |cycle|
       if cycle == 1
         true
       end

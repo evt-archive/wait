@@ -1,4 +1,4 @@
-class Until
+class Wait
   class Log < ::Log
     def tag!(tags)
       tags << :until

@@ -1,4 +1,4 @@
-class Until
+class Wait
   Error = Class.new(RuntimeError)
   NoBlockError = Class.new(Error)
   TimeoutError = Class.new(Error)
@@ -56,7 +56,7 @@ class Until
 
   def call(&action)
     if action.nil?
-      raise NoBlockError, "Until must be actuated with a block"
+      raise NoBlockError, "Wait must be actuated with a block"
     end
 
     stop_time = nil
@@ -166,9 +166,9 @@ class Until
 
   module Substitute
     def self.build
-      instance = Until.build(timeout_milliseconds: 0)
+      instance = Wait.build(timeout_milliseconds: 0)
 
-      sink = Until.register_telemetry_sink(instance)
+      sink = Wait.register_telemetry_sink(instance)
       instance.telemetry_sink = sink
 
       instance.configure
@@ -176,7 +176,7 @@ class Until
       instance
     end
 
-    class Until < ::Until
+    class Wait < ::Wait
       attr_accessor :telemetry_sink
     end
   end

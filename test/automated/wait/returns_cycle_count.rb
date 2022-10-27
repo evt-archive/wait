@@ -1,9 +1,9 @@
 require_relative '../automated_init'
 
-context "Until" do
+context "Wait" do
   context "Result" do
     cycles = nil
-    result_cycles = Until.() do |cycle|
+    result_cycles = Wait.() do |cycle|
       comment "Cycle: #{cycle}"
       cycles = cycle + 1
 

@@ -3,8 +3,8 @@ require_relative '../automated_init'
 context "Boolean Block Result Type" do
   context "Not Boolean" do
     test "Is an error" do
-      assert_raises(Until::ResultTypeError) do
-        Until.() do
+      assert_raises(Wait::ResultTypeError) do
+        Wait.() do
           :some_result
         end
       end
@@ -14,8 +14,8 @@ context "Boolean Block Result Type" do
   context "Boolean" do
     context "True" do
       test "Isn't an error" do
-        refute_raises(Until::ResultTypeError) do
-          Until.() do
+        refute_raises(Wait::ResultTypeError) do
+          Wait.() do
             true
           end
         end
@@ -24,8 +24,8 @@ context "Boolean Block Result Type" do
 
     context "False" do
       test "Isn't an error" do
-        refute_raises(Until::ResultTypeError) do
-          Until.(timeout_milliseconds: 0) do
+        refute_raises(Wait::ResultTypeError) do
+          Wait.(timeout_milliseconds: 0) do
             false
           end
         end
@@ -34,8 +34,8 @@ context "Boolean Block Result Type" do
 
     context "Nil" do
       test "Is considered false" do
-        refute_raises(Until::ResultTypeError) do
-          Until.(timeout_milliseconds: 0) do
+        refute_raises(Wait::ResultTypeError) do
+          Wait.(timeout_milliseconds: 0) do
             nil
           end
         end

@@ -1,7 +1,7 @@
 require_relative '../automated_init'
 
 context "Substitute" do
-  cycle = Until::Substitute.build
+  cycle = Wait::Substitute.build
 
   test "Timeout time is 0" do
     assert(cycle.timeout_milliseconds == 0)

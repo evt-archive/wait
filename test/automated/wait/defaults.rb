@@ -1,11 +1,11 @@
 require_relative '../automated_init'
 
-context "Until" do
+context "Wait" do
   context "Defaults" do
-    cycle = Until.build(interval_milliseconds: nil, timeout_milliseconds: nil)
+    cycle = Wait.build(interval_milliseconds: nil, timeout_milliseconds: nil)
 
     context "Interval Milliseconds" do
-      default_interval_milliseconds = Until::Defaults.interval_milliseconds
+      default_interval_milliseconds = Wait::Defaults.interval_milliseconds
 
       test "#{default_interval_milliseconds}" do
         assert(cycle.interval_milliseconds == default_interval_milliseconds)

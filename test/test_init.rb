@@ -11,4 +11,4 @@ require 'test_bench'; TestBench.activate
 
 require 'pp'
 
-Controls = Until::Controls
+Controls = Wait::Controls

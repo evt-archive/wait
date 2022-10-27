@@ -1,13 +1,13 @@
 require_relative '../automated_init'
 
-context "Until" do
+context "Wait" do
   context "Interval" do
     interval_milliseconds = 11
 
     cycle_limit = 2
 
     start_time = Time.now
-    cycles = Until.(interval_milliseconds: interval_milliseconds) do |cycle|
+    cycles = Wait.(interval_milliseconds: interval_milliseconds) do |cycle|
       if cycle == cycle_limit
         true
       end

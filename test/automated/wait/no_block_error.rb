@@ -1,10 +1,10 @@
 require_relative '../automated_init'
 
-context "Until" do
+context "Wait" do
   context "Actuate Without Block" do
     test "Is an error" do
-      assert_raises(Until::NoBlockError) do
-        Until.()
+      assert_raises(Wait::NoBlockError) do
+        Wait.()
       end
     end
   end

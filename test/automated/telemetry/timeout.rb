@@ -3,9 +3,9 @@ require_relative '../automated_init'
 context "Telemetry" do
   context "Timeout" do
     timeout_milliseconds = 0
-    cycle = Until.build(timeout_milliseconds: timeout_milliseconds)
+    cycle = Wait.build(timeout_milliseconds: timeout_milliseconds)
 
-    sink = Until.register_telemetry_sink(cycle)
+    sink = Wait.register_telemetry_sink(cycle)
 
     cycle.() do
     end

@@ -1,10 +1,10 @@
 require_relative '../automated_init'
 
-context "Until" do
-  context "Cycle Executes Until Affirmative Result is Produced" do
-    cycle = Until.build
+context "Wait" do
+  context "Cycle Executes Wait Affirmative Result is Produced" do
+    cycle = Wait.build
 
-    sink = Until.register_telemetry_sink(cycle)
+    sink = Wait.register_telemetry_sink(cycle)
 
     cycle_limit = 1
 

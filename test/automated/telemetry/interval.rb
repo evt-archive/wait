@@ -4,9 +4,9 @@ context "Telemetry" do
   context "Interval" do
     interval_milliseconds = 11
 
-    cycle = Until.build(interval_milliseconds: interval_milliseconds)
+    cycle = Wait.build(interval_milliseconds: interval_milliseconds)
 
-    sink = Until.register_telemetry_sink(cycle)
+    sink = Wait.register_telemetry_sink(cycle)
 
     cycle_limit = 2
 

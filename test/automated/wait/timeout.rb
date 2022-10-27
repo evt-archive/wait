@@ -1,11 +1,11 @@
 require_relative '../automated_init'
 
-context "Until" do
+context "Wait" do
   context "Timeout" do
     timeout_milliseconds = 11
 
     start_time = Time.now
-    cycles = Until.(timeout_milliseconds: timeout_milliseconds) do
+    cycles = Wait.(timeout_milliseconds: timeout_milliseconds) do
     end
     end_time = Time.now
 
