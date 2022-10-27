@@ -74,7 +74,7 @@ class Until
       cycle += 1
       telemetry.record :cycle, cycle
 
-      result, elapsed_milliseconds = invoke(cycle, &action)
+      result, elapsed_milliseconds = evaluate_condition(cycle, &action)
 
       if result.nil?
         result = false
@@ -109,19 +109,17 @@ class Until
     return cycle_count
   end
 
-  def invoke(cycle, &action)
+  def evaluate_condition(cycle, &action)
     action_start_time = clock.now
 
-    logger.trace { "Invoking action (Cycle: #{cycle}, Start Time: #{clock.iso8601(action_start_time, precision: 5)})" }
+    logger.trace { "Evaluating condition (Cycle: #{cycle}, Start Time: #{clock.iso8601(action_start_time, precision: 5)})" }
 
     result = action.call(cycle)
 
     action_end_time = clock.now
     elapsed_milliseconds = clock.elapsed_milliseconds(action_start_time, action_end_time)
 
-    telemetry.record :invoked_action, elapsed_milliseconds
-
-    logger.debug { "Invoked action (Cycle: #{cycle}, Elapsed Milliseconds: #{elapsed_milliseconds}, Start Time: #{clock.iso8601(action_start_time, precision: 5)}, End Time: #{clock.iso8601(action_end_time, precision: 5)})" }
+    logger.debug { "Evaluated condition (Cycle: #{cycle}, Elapsed Milliseconds: #{elapsed_milliseconds}, Start Time: #{clock.iso8601(action_start_time, precision: 5)}, End Time: #{clock.iso8601(action_end_time, precision: 5)})" }
 
     [result, elapsed_milliseconds]
   end
@@ -156,7 +154,6 @@ class Until
       include ::Telemetry::Sink
 
       record :cycle
-      record :invoked_action
       record :condition_satisfied
       record :delayed
       record :timed_out

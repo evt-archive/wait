@@ -23,7 +23,7 @@ context "Until" do
     comment "Cycles: #{cycles.inspect}"
     comment "Predicted Wait Milliseconds: #{predicted_wait_milliseconds.inspect}"
 
-    test "Cycle waits the specified time" do
+    test "Cycle delays the specified time" do
       assert(elapsed_milliseconds >= predicted_wait_milliseconds)
     end
   end
