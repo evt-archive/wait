@@ -5,7 +5,7 @@ Generalized implementation of execution-until-condition with support for timeout
 ## Example
 
 ``` ruby
-Wait.(interval_milliseconds: 100, timeout_milliseconds: 500) do
+cycles = Wait.(interval_milliseconds: 100, timeout_milliseconds: 500) do
   some_request() == "some value"
 end
 ```
