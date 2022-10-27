@@ -1,5 +1,6 @@
 class Until
   Error = Class.new(RuntimeError)
+  TimeoutError = Class.new(Error)
 
   include Dependency
   include Log::Dependency
