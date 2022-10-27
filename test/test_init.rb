@@ -5,7 +5,7 @@ puts RUBY_DESCRIPTION
 
 require_relative '../init.rb'
 
-require 'until/controls'
+require 'wait/controls'
 
 require 'test_bench'; TestBench.activate
 

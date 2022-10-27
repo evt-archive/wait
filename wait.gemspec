@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |s|
-  s.name = 'evt-until'
+  s.name = 'evt-wait'
   s.version = '0.0.0.0'
   s.summary = 'Generalized implementation of execution-until-condition with support for timeout and polling interval'
   s.description = ' '
 
   s.authors = ['The Eventide Project']
   s.email = 'opensource@eventide-project.org'
-  s.homepage = 'https://github.com/eventide-project/until'
+  s.homepage = 'https://github.com/eventide-project/wait'
   s.licenses = ['MIT']
 
   s.require_paths = ['lib']
