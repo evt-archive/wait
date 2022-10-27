@@ -1,6 +1,7 @@
 class Until
   Error = Class.new(RuntimeError)
   TimeoutError = Class.new(Error)
+  ResultTypeError = Class.new(Error)
 
   include Dependency
   include Log::Dependency
@@ -26,13 +27,13 @@ class Until
     instance
   end
 
-  def self.configure(receiver, attr_name: nil, interval_milliseconds: nil, timeout_milliseconds: nil, delay_condition: nil, poll: nil)
+  def self.configure(receiver, attr_name: nil, interval_milliseconds: nil, timeout_milliseconds: nil, poll: nil)
     attr_name ||= :poll
 
     if !poll.nil?
       instance = poll
     else
-      instance = build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds, delay_condition: delay_condition)
+      instance = build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds)
     end
 
     receiver.public_send "#{attr_name}=", instance
@@ -47,8 +48,8 @@ class Until
     ::Telemetry.configure self
   end
 
-  def self.call(interval_milliseconds: nil, timeout_milliseconds: nil, delay_condition: nil, &action)
-    instance = build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds, delay_condition: delay_condition)
+  def self.call(interval_milliseconds: nil, timeout_milliseconds: nil, &action)
+    instance = build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds)
     instance.call(&action)
   end
 
@@ -73,6 +74,10 @@ class Until
       telemetry.record :cycle, cycle
 
       result, elapsed_milliseconds = invoke(cycle, &action)
+
+      if !result.is_a?(TrueClass) && !result.is_a?(FalseClass)
+        raise ResultTypeError, "The block result must be boolean (Result: #{result.inspect})"
+      end
 
       if result == true
         logger.debug { "Got results from action (Cycle: #{cycle})" }
