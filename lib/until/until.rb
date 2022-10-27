@@ -80,7 +80,7 @@ class Until
         result = false
       end
 
-      if !result.is_a?(TrueClass) && !result.is_a?(FalseClass)
+      if not (result.is_a?(TrueClass) || result.is_a?(FalseClass))
         raise ResultTypeError, "The block result must be boolean (Result: #{result.inspect})"
       end
 
@@ -104,7 +104,9 @@ class Until
 
     logger.debug { "Cycled (Iterations: #{cycle + 1}, Interval Milliseconds: #{interval_milliseconds}, Timeout Milliseconds: #{timeout_milliseconds.inspect}, Stop Time: #{stop_time_iso8601})" }
 
-    return result
+    cycle_count = cycle + 1
+
+    return cycle_count
   end
 
   def invoke(cycle, &action)
