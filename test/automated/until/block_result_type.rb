@@ -1,6 +1,6 @@
-require_relative 'automated_init'
+require_relative '../automated_init'
 
-context "Result Type" do
+context "Block Result Type" do
   context "Not Boolean" do
     test "Is an error" do
       assert_raises(Until::ResultTypeError) do
