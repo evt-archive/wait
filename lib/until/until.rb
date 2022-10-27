@@ -15,17 +15,11 @@ class Until
 
   attr_accessor :timeout_milliseconds
 
-  attr_writer :delay_condition
-  def delay_condition
-    @delay_condition ||= Defaults.delay_condition
-  end
-
-  def self.build(interval_milliseconds: nil, timeout_milliseconds: nil, delay_condition: nil)
+  def self.build(interval_milliseconds: nil, timeout_milliseconds: nil)
     instance = new
 
     instance.interval_milliseconds = interval_milliseconds
     instance.timeout_milliseconds = timeout_milliseconds
-    instance.delay_condition = delay_condition
 
     instance.configure
 
@@ -59,6 +53,10 @@ class Until
   end
 
   def call(&action)
+    if action.nil?
+      raise Error, "Until must be actuated with a block"
+    end
+
     stop_time = nil
     stop_time_iso8601 = nil
     if !timeout_milliseconds.nil?
@@ -66,7 +64,7 @@ class Until
       stop_time_iso8601 = clock.iso8601(stop_time, precision: 5)
     end
 
-    logger.trace { "Cycling (Interval Milliseconds: #{interval_milliseconds}, Timeout Milliseconds: #{timeout_milliseconds.inspect}, Stop Time: #{stop_time_iso8601})" }
+    logger.trace { "Cycling (Interval Milliseconds: #{interval_milliseconds}, Timeout Milliseconds: #{timeout_milliseconds.inspect}, Stop Time: #{stop_time_iso8601.inspect})" }
 
     cycle = -1
     result = nil
@@ -76,14 +74,13 @@ class Until
 
       result, elapsed_milliseconds = invoke(cycle, &action)
 
-      if delay_condition.(result)
-        logger.debug { "Got no results from action (Cycle: #{cycle})" }
-        delay(elapsed_milliseconds)
-      else
+      if result == true
         logger.debug { "Got results from action (Cycle: #{cycle})" }
         telemetry.record :got_result
         break
       end
+
+      delay(elapsed_milliseconds)
 
       if !timeout_milliseconds.nil?
         now = clock.now
@@ -101,10 +98,6 @@ class Until
   end
 
   def invoke(cycle, &action)
-    if action.nil?
-      raise Error, "Until must be actuated with a block"
-    end
-
     action_start_time = clock.now
 
     logger.trace { "Invoking action (Cycle: #{cycle}, Start Time: #{clock.iso8601(action_start_time, precision: 5)})" }
