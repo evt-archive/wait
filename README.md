@@ -13,32 +13,53 @@ end
 ## Overview
 
 - The block is executed repeatedly until the block evaluates to `true`
+- The block can return a `true`, `false`, or `nil` value
 - Polling will continue indefinitely unless a timeout is specified
 - The polling will sleep for the amount of interval milliseconds after executing the block if an interval milliseconds is specified
-- The count of cycles of the block is returned
+- The count of cycles of block execution is returned
 
 ## Usage
 
-### Polling Terminates When the Condition Block Evaluated to True
-
 ``` ruby
-result = Wait.() do
-  true # Polling terminates immediately
+Wait.() do
+  true # Polling terminates
 end
 ```
-
-### No Polling Interval
-
-When no polling interval is specified, block re-executes immediately at the conclusion of the previous cycle.
 
 ``` ruby
 Wait.() do
-  false
-  # No wait
+  false # Polling doesn't terminate
 end
 ```
 
-### With a Polling Interval
+### Timeout
+
+#### With a Timeout
+
+When a timeout is specified, polling will continue only as long as the duration of the timeout.
+
+When the timeout occurs, `Wait::TimeoutError` is raised.
+
+``` ruby
+Wait.(timeout_milliseconds: 500) do
+  false # Loops for 500 milliseconds, then raises
+end
+# => Wait::TimeoutError
+```
+
+#### No Timeout
+
+Without specifying a timeout, polling will continue indefinitely while the block returns a `false` or `nil` value.
+
+``` ruby
+Wait.() do
+  false # Infinite loop
+end
+```
+
+### Polling Interval
+
+#### With a Polling Interval
 
 When a polling interval is specified, block re-executes once per polling interval rather than executing immediately at the conclusion of the previous cycle.
 
@@ -60,35 +81,17 @@ Wait.(interval_milliseconds: 100) do
 end
 ```
 
-### No Timeout
+#### No Polling Interval
 
-Without specifying a timeout, polling will continue indefinitely while the block returns no result.
+When no polling interval is specified, the condition block re-executes immediately at the conclusion of the previous cycle.
 
 ``` ruby
 Wait.() do
-  false # Infinite loop with a no pause between execution cycles
+  false
+  # No delay between cycles
 end
-```
-
-``` ruby
-Wait.(interval_milliseconds: 100) do
-  false # Infinite loop with a 100 millisecond pause between execution cycles
-end
-```
-
-### With a Timeout
-
-When a timeout is specified, polling will continue only as long as the duration of the timeout.
-
-When the timeout occurs, `Wait::TimeoutError` is raised.
-
-``` ruby
-result = Wai.(timeout_milliseconds: 500) do
-  false # Loops for 500 milliseconds, then raises
-end
-# => Wai::TimeoutError
 ```
 
 ## License
 
-The `Wai` library is released under the [MIT License](https://github.com/eventide-project/Wai/blob/master/MIT-License.txt).
+The `Wait` library is released under the [MIT License](https://github.com/eventide-project/wait/blob/master/MIT-License.txt).
