@@ -22,7 +22,7 @@ end
 ### Polling Terminates When the Condition Block Evaluated to True
 
 ``` ruby
-result = Wai.() do
+result = Wait.() do
   true # Polling terminates immediately
 end
 ```
