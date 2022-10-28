@@ -10,27 +10,15 @@ class Wait
   dependency :clock, Clock::UTC
   dependency :telemetry, Telemetry
 
-  attr_writer :interval_milliseconds
-  def interval_milliseconds
-    @interval_milliseconds ||= Defaults.interval_milliseconds
-  end
-
-  attr_accessor :timeout_milliseconds
-
-  def self.build(interval_milliseconds: nil, timeout_milliseconds: nil)
+  def self.build
     instance = new
-
-    instance.interval_milliseconds = interval_milliseconds
-    instance.timeout_milliseconds = timeout_milliseconds
-
     instance.configure
-
     instance
   end
 
-  def self.configure(receiver, attr_name: nil, interval_milliseconds: nil, timeout_milliseconds: nil)
+  def self.configure(receiver, attr_name: nil)
     attr_name ||= :wait
-    instance = build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds)
+    instance = build
     receiver.public_send("#{attr_name}=", instance)
   end
 
@@ -40,11 +28,13 @@ class Wait
   end
 
   def self.call(interval_milliseconds: nil, timeout_milliseconds: nil, &condition)
-    instance = build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds)
-    instance.call(&condition)
+    instance = build
+    instance.call(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds, &condition)
   end
 
-  def call(&condition)
+  def call(interval_milliseconds: nil, timeout_milliseconds: nil, &condition)
+    interval_milliseconds ||= Defaults.interval_milliseconds
+
     if condition.nil?
       raise NoBlockError, "Wait must be actuated with a block"
     end
@@ -56,13 +46,13 @@ class Wait
       stop_time_iso8601 = clock.iso8601(stop_time, precision: 5)
     end
 
-    logger.trace { "Cycling (Interval Milliseconds: #{interval_milliseconds}, Timeout Milliseconds: #{timeout_milliseconds.inspect}, Stop Time: #{stop_time_iso8601.inspect})" }
+    logger.trace { "Cycling (Interval Milliseconds: #{interval_milliseconds.inspect}, Timeout Milliseconds: #{timeout_milliseconds.inspect}, Stop Time: #{stop_time_iso8601.inspect})" }
 
     cycle = -1
     result = nil
     loop do
       cycle += 1
-      telemetry.record :cycle, cycle
+      telemetry.record(:cycle, cycle)
 
       result, elapsed_milliseconds = evaluate_condition(cycle, &condition)
 
@@ -76,23 +66,23 @@ class Wait
 
       if result == true
         logger.debug { "Cycle condition is met (Cycle: #{cycle})" }
-        telemetry.record :condition_satisfied
+        telemetry.record(:condition_satisfied)
         break
       end
 
-      delay(elapsed_milliseconds)
+      delay(interval_milliseconds, elapsed_milliseconds)
 
       if !timeout_milliseconds.nil?
         now = clock.now
         if now >= stop_time
-          logger.debug { "Timeout has lapsed (Cycle: #{cycle}, Stop Time: #{stop_time_iso8601}, Timeout Milliseconds: #{timeout_milliseconds})" }
-          telemetry.record :timed_out, now
+          logger.debug { "Timeout has lapsed (Cycle: #{cycle}, Stop Time: #{stop_time_iso8601}, Timeout Milliseconds: #{timeout_milliseconds.inspect})" }
+          telemetry.record(:timed_out, now)
           break
         end
       end
     end
 
-    logger.debug { "Cycled (Cycles: #{cycle + 1}, Interval Milliseconds: #{interval_milliseconds}, Timeout Milliseconds: #{timeout_milliseconds.inspect}, Stop Time: #{stop_time_iso8601})" }
+    logger.debug { "Cycled (Cycles: #{cycle + 1}, Interval Milliseconds: #{interval_milliseconds.inspect}, Timeout Milliseconds: #{timeout_milliseconds.inspect}, Stop Time: #{stop_time_iso8601})" }
 
     cycle_count = cycle + 1
 
@@ -114,7 +104,7 @@ class Wait
     [result, elapsed_milliseconds]
   end
 
-  def delay(elapsed_milliseconds)
+  def delay(interval_milliseconds, elapsed_milliseconds)
     delay_milliseconds = interval_milliseconds - elapsed_milliseconds
 
     logger.trace { "Delaying (Delay Milliseconds: #{delay_milliseconds}, Interval Milliseconds: #{interval_milliseconds}, Elapsed Milliseconds: #{elapsed_milliseconds})" }
@@ -128,7 +118,7 @@ class Wait
 
     sleep delay_seconds
 
-    telemetry.record :delayed, delay_milliseconds
+    telemetry.record(:delayed, delay_milliseconds)
 
     logger.debug { "Finished delaying (Delay Milliseconds: #{delay_milliseconds}, Interval Milliseconds: #{interval_milliseconds}, Elapsed Milliseconds: #{elapsed_milliseconds})" }
   end
@@ -137,6 +127,12 @@ class Wait
     sink = Telemetry.sink
     cycle.telemetry.register(sink)
     sink
+  end
+
+  module Defaults
+    def self.interval_milliseconds
+      0
+    end
   end
 
   module Telemetry
@@ -156,7 +152,7 @@ class Wait
 
   module Substitute
     def self.build
-      instance = Wait.build(timeout_milliseconds: 0)
+      instance = Wait.build
 
       sink = Wait.register_telemetry_sink(instance)
       instance.telemetry_sink = sink

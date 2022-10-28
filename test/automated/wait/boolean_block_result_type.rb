@@ -31,13 +31,13 @@ context "Boolean Block Result Type" do
         end
       end
     end
+  end
 
-    context "Nil" do
-      test "Is considered false" do
-        refute_raises(Wait::ResultTypeError) do
-          Wait.(timeout_milliseconds: 0) do
-            nil
-          end
+  context "Nil" do
+    test "Is considered false" do
+      refute_raises(Wait::ResultTypeError) do
+        Wait.(timeout_milliseconds: 0) do
+          nil
         end
       end
     end
