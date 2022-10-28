@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |s|
   s.name = 'evt-wait'
-  s.version = '2.0.1.0'
+  s.version = '2.0.1.1'
   s.summary = 'Generalized implementation of execution-until-condition with support for timeout and polling interval'
   s.description = ' '
 
