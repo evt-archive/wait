@@ -28,25 +28,15 @@ class Wait
     instance
   end
 
-  def self.configure(receiver, attr_name: nil, interval_milliseconds: nil, timeout_milliseconds: nil, poll: nil)
-    attr_name ||= :poll
-
-    if !poll.nil?
-      instance = poll
-    else
-      instance = build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds)
-    end
-
-    receiver.public_send "#{attr_name}=", instance
-  end
-
-  def self.none
-    None.build
+  def self.configure(receiver, attr_name: nil, interval_milliseconds: nil, timeout_milliseconds: nil)
+    attr_name ||= :wait
+    instance = build(interval_milliseconds: interval_milliseconds, timeout_milliseconds: timeout_milliseconds)
+    receiver.public_send("#{attr_name}=", instance)
   end
 
   def configure
-    Clock::UTC.configure self
-    ::Telemetry.configure self
+    Clock::UTC.configure(self)
+    ::Telemetry.configure(self)
   end
 
   def self.call(interval_milliseconds: nil, timeout_milliseconds: nil, &condition)
